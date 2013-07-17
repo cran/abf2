@@ -1,0 +1,7 @@
+export(abfload)
+export(multiplot)
+S3method(plot, abf2)
+S3method(print, abf2)
+S3method(split, abf2)
+S3method(summary, abf2)
+S3method(plot, abf2split)
