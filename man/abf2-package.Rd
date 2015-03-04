@@ -29,7 +29,7 @@ Matthew Caldwell <m.caldwell@ucl.ac.uk>
 }
 \keyword{ package }
 \examples{
-\donttest{
+\dontrun{
 # load an ABF file chosen through a standard file dialog
 ab <- abfload()
 

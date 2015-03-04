@@ -118,58 +118,58 @@ abfload <- function ( filename=NULL )
 	}
 	
 	# OK, now we need to read the data
-	if ( result$dataFormat == 0 )
-	{
-		dataSz <- 2
-		dataType <- "integer"
-	}
-	else if ( result$dataFormat == 1 )
-	{
-		dataSz <- 4
-		dataType <- "numeric"
-	}
-	else
-	{
-		warning(paste("unknown data format", result$dataFormat, "- data section not read"))
-		close(fp)
-		return(result)
-	}
-	
-	headOffset <- result$sections$DataSection$blockIndex * BLOCK_SIZE
-	#si <- result$protocol$ADCSequenceInterval
-	
-	if ( result$protocol$operationMode == 3 )
-	{
-		# gap free mode - this is our primary goal
-		#result$dataPtsPerChannel <- result$sections$DataSection$numEntries / length(result$ADC)
-		seek(fp, where=headOffset)
-		result$rawdata <- readBin(fp, what=dataType, size=dataSz, n=result$sections$DataSection$numEntries)
-		result$traces <- matrix(result$rawdata, nrow=length(result$ADC))
-		result$s <- 0:(dim(result$traces)[2]-1) * (result$protocol$ADCSequenceInterval * 1e-6)
-		
-		# scale int data by ADC settings
-		if ( result$dataFormat == 0 )
-		{
-			for ( ii in 1:length(result$ADC) )
-			{
-				adc <- result$ADC[[ii]]
-				result$ADC[[ii]]$scaleFactor <- result$protocol$ADCRange /
-										     	(result$protocol$ADCResolution *
-										     	adc$instScaleFactor *
-										     	adc$signalGain *
-										     	adc$ADCProgGain *
-										     	adc$teleAddGain)
-										     						
-				result$ADC[[ii]]$offset <- adc$instOffset - adc$signalOffset
-				
-				result$traces[ii,] <- result$traces[ii,] * result$ADC[[ii]]$scaleFactor + result$ADC[[ii]]$offset
-			}
-		}
-	}
-	else
-	{
-		warning(paste("unsupported data mode", result$protocol$operationMode, "- data section not read"))
-	}
+    if ( result$dataFormat == 0 )
+    {
+        dataSz <- 2
+        dataType <- "integer"
+    }
+    else if ( result$dataFormat == 1 )
+    {
+        dataSz <- 4
+        dataType <- "numeric"
+    }
+    else
+    {
+        warning(paste("unknown data format", result$dataFormat, "- data section not read"))
+        close(fp)
+        invisible(result)
+    }
+
+    headOffset <- result$sections$DataSection$blockIndex * BLOCK_SIZE
+    #si <- result$protocol$ADCSequenceInterval
+
+    if ( result$protocol$operationMode == 3 )
+    {
+        # gap free mode - this is our primary goal
+        #result$dataPtsPerChannel <- result$sections$DataSection$numEntries / length(result$ADC)
+        seek(fp, where=headOffset)
+        result$rawdata <- readBin(fp, what=dataType, size=dataSz, n=result$sections$DataSection$numEntries)
+        result$traces <- matrix(result$rawdata, nrow=length(result$ADC))
+        result$s <- 0:(dim(result$traces)[2]-1) * (result$protocol$ADCSequenceInterval * 1e-6)
+    
+        # scale int data by ADC settings
+        if ( result$dataFormat == 0 )
+        {
+            for ( ii in 1:length(result$ADC) )
+            {
+                adc <- result$ADC[[ii]]
+                result$ADC[[ii]]$scaleFactor <- result$protocol$ADCRange /
+                                                (result$protocol$ADCResolution *
+                                                adc$instScaleFactor *
+                                                adc$signalGain *
+                                                adc$ADCProgGain *
+                                                adc$teleAddGain)
+                                                                
+                result$ADC[[ii]]$offset <- adc$instOffset - adc$signalOffset
+            
+                result$traces[ii,] <- result$traces[ii,] * result$ADC[[ii]]$scaleFactor + result$ADC[[ii]]$offset
+            }
+        }
+    }
+    else
+    {
+        warning(paste("unsupported data mode", result$protocol$operationMode, "- data section not read"))
+    }
 	
 	close(fp)
 	invisible(result)

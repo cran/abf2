@@ -1,7 +1,7 @@
-f1fb8de3227a7633c12b3c46bd7044eb *DESCRIPTION
+ecfddbe78dcd8d17d6b47ff91c2d11f5 *DESCRIPTION
 58f30a8d4e4635a734091fcbc8c1a1a3 *NAMESPACE
-e858635a5d4b5bf383902d902c06b69c *R/abf.R
-93e7d745526512e3fdd3b5f96069c3c1 *man/abf2-package.Rd
+f9e7d816d9d65eee21fdfb9d7bfe3ab1 *R/abf.R
+9836852da12b1d113226e59dddd1f334 *man/abf2-package.Rd
 329b9b31bcad46f573873129869302d6 *man/abfload.Rd
 4969589e25480b23e02863d31bf36336 *man/multiplot.Rd
 4c906e4a9aaa3c119fdad9ebb6e0788c *man/plot.abf2.Rd
